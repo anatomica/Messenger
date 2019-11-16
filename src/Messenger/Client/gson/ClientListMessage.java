@@ -8,7 +8,7 @@ public class ClientListMessage {
 
     public List<String> online;
 
-    public  String toJson() {
+    public String toJson() {
         return new Gson().toJson(this);
     }
 

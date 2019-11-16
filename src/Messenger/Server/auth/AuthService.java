@@ -1,5 +1,6 @@
 package Messenger.Server.auth;
 import com.sun.istack.internal.Nullable;
+import java.sql.SQLException;
 
 public interface AuthService {
 
@@ -7,6 +8,6 @@ public interface AuthService {
     void stop();
 
     @Nullable
-    String getNickByLoginPass(String login, String pass);
+    String getNickByLoginPass(String login, String pass) throws SQLException;
 
 }

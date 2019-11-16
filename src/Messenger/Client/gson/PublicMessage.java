@@ -6,7 +6,7 @@ public class PublicMessage {
     public String from;
     public String message;
 
-    public  String toJson() {
+    public String toJson() {
         return new Gson().toJson(this);
     }
 

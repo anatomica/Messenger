@@ -7,7 +7,7 @@ public class PrivateMessage {
     public String to;
     public String message;
 
-    public  String toJson() {
+    public String toJson() {
 //        Gson gson = new GsonBuilder()
 //                .setPrettyPrinting()
 //                .create();

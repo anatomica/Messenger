@@ -27,7 +27,6 @@ public class Messenger extends Application {
         Controller controller = loader.getController();
         stage.setOnHidden(e -> controller.shutdown());
         stage.setScene(scene);
-        stage.setTitle("Messenger");
         stage.setX(900);
         stage.setY(400);
         stage.show();

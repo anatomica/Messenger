@@ -1,7 +1,5 @@
 package Messenger.Client.Controller;
-
-import Messenger.Client.gson.ClientListMessage;
-import Messenger.Client.gson.Message;
+import Messenger.Client.gson.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Alert;
@@ -123,5 +121,7 @@ class MessageService {
             sendMessage(STOP_SERVER_COMMAND);
         }
         network.close();
+        System.exit(0);
     }
+
 }

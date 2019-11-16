@@ -7,11 +7,11 @@ import java.util.List;
 public class Message {
 
     public Command command;
-
     public PrivateMessage privateMessage;
     public AuthMessage authMessage;
     public PublicMessage publicMessage;
     public ClientListMessage clientListMessage;
+    public ChangeNick changeNick;
 
     public static Message createClientList(List<String> nicknames) {
         Message message = create(Command.CLIENT_LIST);
@@ -21,7 +21,7 @@ public class Message {
         return message;
     }
 
-    public  String toJson() {
+    public String toJson() {
         return new Gson().toJson(this);
     }
 
@@ -44,6 +44,12 @@ public class Message {
     public static Message createAuth(AuthMessage msg) {
         Message m = create(Command.AUTH_MESSAGE);
         m.authMessage = msg;
+        return m;
+    }
+
+    public static Message createNick(ChangeNick msg) {
+        Message m = create(Command.CHANGE_NICK);
+        m.changeNick = msg;
         return m;
     }
 

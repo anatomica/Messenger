@@ -1,28 +1,42 @@
 package Messenger.Server.auth;
-import java.util.Arrays;
-import java.util.List;
+import java.sql.*;
 
 public class BaseAuthService implements AuthService {
 
-    private static class Entry {
-        private String login;
-        private String password;
-        private String nick;
+    private static Connection conn;
+    private static Statement stmt;
 
-        Entry(String login, String password, String nick) {
-            this.login = login;
-            this.password = password;
-            this.nick = nick;
+    @Override
+    public String getNickByLoginPass(String login, String pass) throws SQLException {
+
+        try {
+            connection();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
+
+        ResultSet rs = stmt.executeQuery("select * from LoginData");
+        while (rs.next()) {
+            ResultSetMetaData dataInBase = rs.getMetaData();
+            for (int i = 1; i <= dataInBase.getColumnCount(); i++) {
+                if (rs.getString("Login").equals(login) && rs.getString("Pass").equals(pass)) {
+                    return rs.getString("Nick");
+                }
+            }
+        }
+        return null;
     }
 
-    private final List<Entry> entries = Arrays.asList (
-            new Entry("1", "1", "Оля"),
-            new Entry("2", "2", "Макс"),
-            new Entry("3", "3", "Ника"),
-            new Entry("4", "4", "Олег"),
-            new Entry("5", "5", "Влад")
-    );
+    private static void connection() throws ClassNotFoundException, SQLException {
+        Class.forName("org.sqlite.JDBC");
+        conn = DriverManager.getConnection("jdbc:sqlite:LoginData.db");
+        stmt = conn.createStatement();
+    }
+
+    public static void disconect() throws SQLException {
+        stmt.close();
+        conn.close();
+    }
 
     @Override
     public void start() {
@@ -32,15 +46,5 @@ public class BaseAuthService implements AuthService {
     @Override
     public void stop() {
         System.out.println("Сервис автоизации остановлен!");
-    }
-
-    @Override
-    public String getNickByLoginPass(String login, String pass) {
-        for (Entry entry : entries) {
-            if (entry.login.equals(login) && entry.password.equals(pass)) {
-                return entry.nick;
-            }
-        }
-        return null;
     }
 }

@@ -6,7 +6,7 @@ public class AuthMessage {
     public String login;
     public String password;
 
-    public  String toJson() {
+    public String toJson() {
         return new Gson().toJson(this);
     }
 
