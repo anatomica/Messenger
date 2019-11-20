@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane prefHeight="400.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/8.0.221" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.Controller.Controller">
+    <children>
+        <HBox fx:id="authPanel" alignment="CENTER" layoutX="87.0" layoutY="189.0">
+            <TextField fx:id="loginField" onAction="#sendAuth" prefHeight="25.0" prefWidth="187.0" promptText="Логин" HBox.hgrow="ALWAYS" />
+            <PasswordField fx:id="passField" onAction="#sendAuth" prefHeight="25.0" prefWidth="171.0" promptText="Пароль" HBox.hgrow="ALWAYS">
+                <HBox.margin>
+                    <Insets left="5.0" />
+                </HBox.margin>
+            </PasswordField>
+            <Button onAction="#sendAuth" prefHeight="25.0" prefWidth="132.0" text="Подключиться" HBox.hgrow="ALWAYS">
+                <HBox.margin>
+                    <Insets left="10.0" />
+                </HBox.margin>
+            </Button>
+            <VBox.margin>
+                <Insets left="10.0" right="10.0" />
+            </VBox.margin>
+        </HBox>
+        <VBox fx:id="chatPanel" alignment="CENTER" spacing="5.0" visible="false" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="2.0">
+            <children>
+            <MenuBar prefHeight="25.0" prefWidth="611.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="Файл">
+                  <items>
+                    <MenuItem fx:id="closeButton" mnemonicParsing="false" onAction="#closeButtonAction" text="Выход" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Правка">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Найти" />
+                        <MenuItem fx:id="changeNick" mnemonicParsing="false" onAction="#changeNickAction" text="Сменить Ник" />
+                        <MenuItem fx:id="clearChat" mnemonicParsing="false" onAction="#clearChatAction" text="Очистить чат" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Помощь">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="О приложении ..." />
+                    <MenuItem fx:id="howChangeNick" mnemonicParsing="false" onAction="#howChangeNickAction" text="Как сменить ник?" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <HBox prefHeight="377.0" prefWidth="665.0">
+               <children>
+                      <TextArea fx:id="textArea" editable="false" prefHeight="326.0" prefWidth="532.0" wrapText="true">
+                          <padding>
+                              <Insets bottom="5.0" right="5.0" />
+                          </padding>
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                      </TextArea>
+                  <TitledPane animated="false" text="Онлайн">
+                     <content>
+                        <ListView fx:id="clientList" prefHeight="355.0" prefWidth="132.0" />
+                     </content>
+                  </TitledPane>
+               </children>
+            </HBox>
+                <HBox spacing="10.0">
+                    <children>
+                        <TextField fx:id="textMessage" onAction="#sendText" prefHeight="35.0" prefWidth="533.0" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font size="16.0" />
+                     </font></TextField>
+                        <Button fx:id="sendMessageButton" minWidth="100.0" mnemonicParsing="false" onAction="#sendMessage" prefHeight="37.0" prefWidth="135.0" text="Отправить" textFill="#662900">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Button>
+                    </children>
+                </HBox>
+            </children>
+            <padding>
+                <Insets bottom="5.0" right="5.0" />
+            </padding>
+        </VBox>
+    </children>
+</AnchorPane>
