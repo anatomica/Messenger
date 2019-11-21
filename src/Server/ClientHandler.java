@@ -138,7 +138,7 @@ class ClientHandler {
 
     private static void connection() throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
-        conn = DriverManager.getConnection("jdbc:sqlite:LoginData.db");
+        conn = DriverManager.getConnection("jdbc:sqlite::resource:Server/resources/LoginData.db");
         stmt = conn.createStatement();
     }
 
