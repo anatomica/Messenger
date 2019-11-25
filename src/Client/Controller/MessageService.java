@@ -1,15 +1,18 @@
 package Client.Controller;
-import Client.gson.*;
+import Client.gson.ClientListMessage;
+import Client.gson.Message;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 class MessageService {
@@ -31,7 +34,7 @@ class MessageService {
     private int waitTime = 120;  // ожидание в секундах
     private int howManyMsgLoad = 5; // кол-во загрузки сообщений из истории
 
-    MessageService(Controller controller, boolean needStopServerOnClosed) {
+    MessageService(Controller controller, boolean needStopServerOnClosed) throws URISyntaxException, IOException {
         this.textMessage = controller.textMessage;
         this.textArea = controller.textArea;
         this.controller = controller;
@@ -40,6 +43,8 @@ class MessageService {
     }
 
     private void initialize() {
+        createFile();
+        // getFile();
         readProperties();
         startConnectionToServer();
         timeWait();
@@ -96,7 +101,7 @@ class MessageService {
     void sendMessage(String message) {
         network.send(message);
         if (!textMessage.getText().equals(""))
-            ChatHistory("Я: " + textMessage.getText());
+            writeChatHistory("Я: " + textMessage.getText());
     }
 
     void processRetrievedMessage(String message) throws IOException {
@@ -121,7 +126,7 @@ class MessageService {
                 textArea.appendText(message + System.lineSeparator());
                 if (!message.equals("")) {
                     if (!message.endsWith("лайн!"))
-                        ChatHistory(message);
+                        writeChatHistory(message);
                 }
             }
         }
@@ -135,19 +140,66 @@ class MessageService {
         System.exit(0);
     }
 
-    private void ChatHistory(String messageText) {
-        File file = new File("src/Client/Controller/ChatHistory.txt");
-        System.out.println(file.canWrite());
-        try (FileWriter writer = new FileWriter(file, true);) {
-            writer.write(messageText + "\n");
+    private String resource = "/Client/ChatHistory.txt";
+    private URL res = getClass().getResource(resource);
+    private File fileHistory;
+    private String pathToHistory;
+
+    private void createFile() {
+        try {
+            URI uri = MessageService.class.getProtectionDomain().getCodeSource().getLocation().toURI();
+            pathToHistory = new File(uri).getParent() + "\\ChatHistory.txt";
+            System.out.println(pathToHistory);
+            fileHistory = new File(pathToHistory);
+            if (fileHistory.createNewFile()) System.out.println("Файл истории создан!");
+            else System.out.println("Файл истории ранее создан и найден!");
+        } catch (IOException | URISyntaxException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void getFile() {
+        try {
+//            InputStream input = getClass().getResourceAsStream(resource);
+//            OutputStream out = new FileOutputStream(file);
+//
+//            int read;
+//            byte[] bytes = new byte[1024];
+//            while ((read = input.read(bytes)) != -1) {
+//                out.write(bytes, 0, read);
+//            } out.close();
+//        } catch (IOException ex) {
+//            System.out.println(ex.getMessage());
+//        }
+
+            System.out.println(MessageService.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+//            System.out.println(MessageService.class.getResource("/Client/ChatHistory.txt").toExternalForm());
+//            System.out.println(Objects.requireNonNull(this.getClass().getClassLoader().getResource("Client/ChatHistory.txt")).toExternalForm());
+//            System.out.println(Objects.requireNonNull(getClass().getClassLoader().getResource("Client/ChatHistory.txt")).getFile());
+//            Path path = Paths.get(MessageService.class.getResource(".").toURI());
+//            System.out.println(path.getParent());
+//            System.out.println(path.getParent().getParent());
+//            System.out.println(Paths.get(MessageService.class.getResource("\\ChatHistory.txt").toURI()));
+
+        } catch (URISyntaxException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void writeChatHistory(String messageText) {
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream(fileHistory, true), "UTF-8"))) {
+            bw.write(messageText + "\n");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
 
     private void loadChatHistory() throws IOException {
+        if (fileHistory.createNewFile()) textArea.appendText("\n");
         textArea.appendText("Последние " + howManyMsgLoad + " сообщений:");
-        BufferedReader br = new BufferedReader(new FileReader("src/Client/Controller/ChatHistory.txt"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(
+                new FileInputStream(fileHistory), "UTF-8"));
         List<String> listHistory = new ArrayList<>();
 
         String tmp;
@@ -171,6 +223,5 @@ class MessageService {
             chatHistory.append(s);
         }
         textArea.appendText(chatHistory + "\n");
-
     }
 }
